@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The World Today — Wednesday 25 November 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body {
+    background: #f8f4e9;
+    color: #141310;
+    font-family: Georgia, 'Times New Roman', serif;
+    padding: 16px 30px 14px 30px;
+  }
+  .sans { font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  /* ---------- masthead ---------- */
+  .topline {
+    display: flex; justify-content: space-between;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+    border-bottom: 1px solid #141310; padding-bottom: 4px;
+  }
+  h1.masthead {
+    text-align: center; font-size: 53px; font-weight: 900;
+    letter-spacing: 1px; line-height: 1.02; padding: 5px 0 4px 0;
+  }
+  .dateline {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 3px solid #141310; border-bottom: 1px solid #141310;
+    padding: 4px 2px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14.5px;
+  }
+  .dateline .date { font-weight: 700; letter-spacing: 0.4px; }
+  .dateline .mid { color: #b3001b; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; font-size: 12.5px; }
+
+  /* ---------- lead ---------- */
+  .lead { display: grid; grid-template-columns: 496px 444px; gap: 24px; margin-top: 10px; }
+  .kicker {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12.5px; font-weight: 700; letter-spacing: 2.2px;
+    color: #b3001b; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .lead h2 { font-size: 43px; line-height: 1.04; font-weight: 900; }
+  .lead p { font-size: 16.6px; line-height: 1.34; margin-top: 8px; text-align: justify; }
+  .stats {
+    display: flex; gap: 8px; margin-top: 10px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .stats div {
+    border: 1.5px solid #141310; padding: 5px 8px 4px 8px; text-align: center;
+  }
+  .stats b { display: block; font-size: 15.5px; }
+  .stats span { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; }
+  .lead figure img { width: 444px; height: 190px; object-fit: cover; display: block; }
+  .lead figcaption {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11.5px; color: #44423a; margin-top: 4px; line-height: 1.3;
+  }
+
+  .rule { border-top: 2.5px solid #141310; margin: 8px 0 7px 0; }
+
+  /* ---------- story rows ---------- */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .story h3 { font-size: 24px; line-height: 1.1; font-weight: 900; }
+  .story p { font-size: 14.2px; line-height: 1.3; margin-top: 5px; text-align: justify; }
+  .story .kicker { margin-bottom: 4px; font-size: 11.5px; }
+  .story img.thumb { float: right; width: 118px; height: 168px; object-fit: cover; margin: 2px 0 6px 12px; }
+  .row2 { margin-top: 6px; }
+  .row2 h3 { font-size: 22.5px; }
+  .row2 p { font-size: 13.8px; }
+
+  /* ---------- sport band ---------- */
+  .sport {
+    background: #141310; color: #f8f4e9; margin-top: 8px;
+    display: grid; grid-template-columns: 250px 1fr; align-items: center;
+    padding: 6px 18px 6px 14px;
+  }
+  .sport .big { font-size: 58px; font-weight: 900; line-height: 0.95; }
+  .sport .big small { display: block; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; margin-top: 3px; }
+  .sport h3 { font-size: 21px; line-height: 1.12; font-weight: 900; }
+  .sport p { font-size: 13.2px; line-height: 1.3; margin-top: 4px; color: #ddd6c4; }
+  .sport .kicker { color: #ff5a4d; margin-bottom: 3px; }
+
+  /* ---------- briefs & footer ---------- */
+  .briefs { margin-top: 6px; border-top: 1px solid #141310; padding-top: 5px;
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.4px; line-height: 1.45; }
+  .briefs b { letter-spacing: 1px; font-size: 11.5px; }
+  .briefs .dot { color: #b3001b; font-weight: 900; padding: 0 5px; }
+  .footer {
+    margin-top: 5px; border-top: 3px solid #141310; padding-top: 4px;
+    display: flex; justify-content: space-between;
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; color: #44423a;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topline"><span>One image · the whole day</span><span>Global edition</span><span>No. 25</span></div>
+  <h1 class="masthead">THE WORLD TODAY</h1>
+  <div class="dateline">
+    <span class="date">Wednesday, 25 November 2026</span>
+    <span class="mid">Shenzhou-24 makes history over Tiangong</span>
+    <span>Price: one glance</span>
+  </div>
+
+  <!-- LEAD -->
+  <section class="lead">
+    <div>
+      <div class="kicker">Space · Jiuquan, China</div>
+      <h2>First Foreign Astronaut Flies to China&rsquo;s Space Station</h2>
+      <p>Shenzhou-24 roared off the pad at dawn carrying Pakistan&rsquo;s <b>Muhammad Zeeshan Ali</b>, 40 &mdash;
+      the first foreigner ever to visit the Tiangong station. Commander <b>Tang Hongbo</b>, on a record third
+      trip to Tiangong, and flight engineer <b>Wu Yi</b> complete the crew. Ali, a payload specialist, will run
+      experiments for about a week before returning on Shenzhou-23.</p>
+      <div class="stats">
+        <div><b>08:18</b><span>Liftoff, Beijing</span></div>
+        <div><b>Long March 2F</b><span>Rocket</span></div>
+        <div><b>Crew of 3</b><span>2 China · 1 Pakistan</span></div>
+        <div><b>1st</b><span>Foreign visitor</span></div>
+      </div>
+    </div>
+    <figure>
+      <img src="rocket.jpg" alt="Shenzhou-24 launch">
+      <figcaption>Shenzhou-24 lifts off from the Jiuquan Satellite Launch Centre at dawn on Wednesday, opening Tiangong to its first foreign guest.</figcaption>
+    </figure>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ROW 1 -->
+  <section class="row">
+    <article class="story">
+      <div class="kicker">Tech · Brooklyn, New York</div>
+      <h3>Huawei Convicted in the US: Guilty on 10 of 12 Counts</h3>
+      <p>A federal jury convicted China&rsquo;s Huawei of bank fraud, sanctions violations and stealing American
+      trade secrets &mdash; Cisco source code, Quintel antenna designs, a CNEX circuit board &mdash; after a
+      two-month trial with more than 60 witnesses. Jurors acquitted it of racketeering. The case, opened in
+      2018, is the sharpest legal blow yet in the US&ndash;China technology war.</p>
+    </article>
+    <article class="story">
+      <div class="kicker">Middle East · Riyadh</div>
+      <img class="thumb" src="tower.jpg" alt="Riyadh tower">
+      <h3>Drone Hits Riyadh&rsquo;s Tallest Tower: 11 Injured</h3>
+      <p>A Houthi drone slammed into the 80-storey PIF Tower in Riyadh&rsquo;s financial district &mdash; the
+      second strike on the tower in under a week. Eleven people were hurt: two Saudis, two Indians, three
+      Nepalese and four Egyptians. The Saudi-led coalition vowed a &ldquo;decisive&rdquo; response and struck
+      back in Yemen.</p>
+    </article>
+  </section>
+
+  <!-- ROW 2 -->
+  <section class="row row2">
+    <article class="story">
+      <div class="kicker">Technology</div>
+      <h3>Microsoft Declares &lsquo;Code Red&rsquo; After Worst-Ever Outage</h3>
+      <p>A Code Red overhaul follows the 12&ndash;13 November outage, which left more customers
+      without email than any incident in Exchange Online history, hitting governments from Australia to the
+      US. The cause: a hidden Windows defect dating to July. CEO Satya Nadella has apologised; the new goal
+      is a worldwide fix within one hour.</p>
+    </article>
+    <article class="story">
+      <div class="kicker">Trade · Washington</div>
+      <h3>US Readies New Tariffs on 16 Trading Partners</h3>
+      <p>Washington is set to unveil Section 301 duties after a probe into &ldquo;excess industrial
+      capacity&rdquo; in China, the EU, India, Japan and 12 other partners. The levies would stack on existing
+      tariffs and partly replace those struck down by the Supreme Court in February; rates of 15&ndash;25%
+      are in play.</p>
+    </article>
+  </section>
+
+  <!-- SPORT -->
+  <section class="sport">
+    <div class="big">204<small>OFF 53 BALLS</small></div>
+    <div>
+      <div class="kicker">Sport · Cricket, Doha</div>
+      <h3>Aged 15, Sooryavanshi Smashes Cricket&rsquo;s Record Books</h3>
+      <p>India&rsquo;s Vaibhav Sooryavanshi hit the fastest century (28 balls) and fastest double century
+      (52 balls) in List A history, with a record 28 sixes, as India A chased 250 in just 14.2 overs
+      against the UAE.</p>
+    </div>
+  </section>
+
+  <!-- BRIEFS -->
+  <div class="briefs">
+    <b>INTELLIGENCE</b> CIA and ODNI hit by cyber breach of unclassified systems (Reuters).<span class="dot">●</span><b>UKRAINE</b> Russia&rsquo;s own figures put its war dead at almost 500,000.<span class="dot">●</span><b>MARKETS</b> Dell lifts outlook on record AI-server quarter; Nvidia &minus;7%.<span class="dot">●</span><b>GAMING</b> GTA VI draws 39M PS5 players in 4 days &mdash; Sony&rsquo;s biggest launch in 30 years.
+  </div>
+
+  <div class="footer">
+    <span>Compiled from Reuters, Xinhua, BBC and Cricinfo reports</span>
+    <span>Wednesday 25 November 2026 · The World Today</span>
+  </div>
+
+</body>
+</html>
