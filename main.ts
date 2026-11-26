@@ -1,67 +1,113 @@
-// news-image-20261125 — "The World Today, Wednesday 25 November 2026".
+// "The World Today" — one-image summary of Wednesday 25 November 2026.
+// make.fun competition: news-image-20261125.
 //
-// Entry program for the make.fun bounty "Sum up 25 November's world news in
-// one image". The poster itself (poster.png, typeset in poster.html and
-// rendered once with headless Chromium) is the deliverable; this program
-// validates it rigorously and copies it, byte for byte, to
-// <output>/entry.png. Standard library only: no network, no clock, no
-// randomness — two runs always produce identical bytes.
+// The artwork is poster.png (typeset in poster.html, rendered once with
+// headless Chromium). This entrypoint's whole job is to stand guard over
+// that file: run a table of structural checks against it, and only if
+// every check passes, copy it untouched to <output>/entry.png and prove
+// the copy is identical by hash. Nothing here touches the network, the
+// clock or a random source, so the output bytes never vary between runs.
 
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { dirname, join } from "node:path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const MAX_BYTES = 1_048_576; // 1 MiB hard cap from the bounty rules
-const EXPECTED = 1024; // poster must be exactly 1024x1024
+const BYTE_CAP = 1024 * 1024; // bounty rule: the image is at most 1 MiB
+const SIDE = 1024; // bounty rule: the image is exactly 1024 x 1024
 
-function fail(message: string): never {
-  console.error(`news-image-25: ${message}`);
-  process.exit(1);
+interface Check {
+  label: string;
+  ok: boolean;
+  detail: string;
 }
 
-const here = dirname(fileURLToPath(import.meta.url));
-const sourcePath = join(here, "poster.png");
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-const targetPath = join(outDir, "entry.png");
-
-let png: Buffer;
-try {
-  png = readFileSync(sourcePath);
-} catch {
-  fail(`poster.png is missing next to main.ts (${sourcePath})`);
+function sha256Hex(bytes: Buffer): string {
+  const hash = createHash("sha256");
+  hash.update(bytes);
+  return hash.digest("hex");
 }
 
-// --- structural validation of the PNG -------------------------------------
-const MAGIC = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
-if (png.length < 8 || !MAGIC.every((b, i) => png[i] === b)) {
-  fail("poster.png does not start with the PNG magic bytes");
-}
-if (png.length > MAX_BYTES) {
-  fail(`poster.png is ${png.length} bytes, over the 1 MiB cap`);
-}
-// IHDR is the first chunk: width and height are big-endian uint32 at 16/20.
-const width = png.readUInt32BE(16);
-const height = png.readUInt32BE(20);
-if (width !== EXPECTED || height !== EXPECTED) {
-  fail(`poster.png is ${width}x${height}, expected ${EXPECTED}x${EXPECTED}`);
-}
-// A well-formed PNG ends with the IEND chunk (type bytes at length-8).
-const tail = png.subarray(png.length - 8, png.length - 4).toString("latin1");
-if (tail !== "IEND") {
-  fail("poster.png does not end with an IEND chunk (truncated file?)");
+// Read the dimensions out of the IHDR chunk by hand: an 8-byte signature,
+// then the first chunk's length (4 bytes) and type (4 bytes, "IHDR"),
+// then width and height as big-endian 32-bit integers.
+function ihdrSize(bytes: Buffer): { w: number; h: number } | null {
+  if (bytes.length < 24) return null;
+  if (bytes.toString("latin1", 12, 16) !== "IHDR") return null;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  return { w: view.getUint32(16), h: view.getUint32(20) };
 }
 
-// --- copy + verify ----------------------------------------------------------
-mkdirSync(outDir, { recursive: true });
-writeFileSync(targetPath, png);
-
-const written = readFileSync(targetPath);
-const digest = (buf: Buffer) => createHash("sha256").update(buf).digest("hex");
-if (!written.equals(png) || digest(written) !== digest(png)) {
-  fail("verification failed: entry.png differs from poster.png after copy");
+function startsWithSignature(bytes: Buffer): boolean {
+  const signature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  if (bytes.length < signature.length) return false;
+  return signature.every((value, index) => bytes[index] === value);
 }
 
-console.log(
-  `news-image-25: wrote ${targetPath} (${png.length} bytes, sha256 ${digest(png)})`,
-);
+function endsWithIend(bytes: Buffer): boolean {
+  // The final chunk of a complete PNG is IEND: its type field sits four
+  // bytes before the trailing CRC, i.e. at length-8 .. length-4.
+  if (bytes.length < 12) return false;
+  return bytes.toString("latin1", bytes.length - 8, bytes.length - 4) === "IEND";
+}
+
+function run(): number {
+  const root = path.dirname(fileURLToPath(import.meta.url));
+  const posterPath = path.join(root, "poster.png");
+  const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+  const entryPath = path.join(outDir, "entry.png");
+
+  if (!fs.existsSync(posterPath)) {
+    console.error(`the-world-today: no poster.png beside main.ts (${posterPath})`);
+    return 1;
+  }
+  const poster = fs.readFileSync(posterPath);
+  const size = ihdrSize(poster);
+
+  const checks: Check[] = [
+    {
+      label: "PNG signature",
+      ok: startsWithSignature(poster),
+      detail: "first eight bytes are the PNG magic number",
+    },
+    {
+      label: "size cap",
+      ok: poster.length <= BYTE_CAP,
+      detail: `${poster.length} of ${BYTE_CAP} bytes allowed`,
+    },
+    {
+      label: "dimensions",
+      ok: size !== null && size.w === SIDE && size.h === SIDE,
+      detail: size ? `${size.w}x${size.h}, expected ${SIDE}x${SIDE}` : "no IHDR chunk found",
+    },
+    {
+      label: "complete file",
+      ok: endsWithIend(poster),
+      detail: "last chunk is IEND, so the file is not truncated",
+    },
+  ];
+
+  const failed = checks.filter((check) => !check.ok);
+  if (failed.length > 0) {
+    for (const check of failed) {
+      console.error(`the-world-today: FAILED ${check.label} — ${check.detail}`);
+    }
+    return 1;
+  }
+
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(entryPath, poster);
+
+  const copy = fs.readFileSync(entryPath);
+  if (copy.length !== poster.length || sha256Hex(copy) !== sha256Hex(poster)) {
+    console.error("the-world-today: FAILED copy — entry.png differs from poster.png");
+    return 1;
+  }
+
+  console.log(
+    `the-world-today: entry.png written (${poster.length} bytes, sha256 ${sha256Hex(poster)})`,
+  );
+  return 0;
+}
+
+process.exit(run());
